@@ -11,7 +11,6 @@ class ErrorConsole(QWidget):
         self.title = QLabel("Errors detected:")
         self.error_window = QTextEdit()
 
-
         self.back_button = QPushButton("Main menu")
         self.back_button.clicked.connect(self.close)
 

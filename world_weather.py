@@ -47,7 +47,6 @@ class WorldWeather(QWidget):
         self.humidity_label = QLabel(self)
         self.weather_parameters_labels = [self.temperature_label, self.wind_label, self.pressure_label, self.humidity_label]
 
-
         self.temp_icon_label = QLabel(self)
         self.wind_icon_label = QLabel(self)
         self.press_icon_label = QLabel(self)

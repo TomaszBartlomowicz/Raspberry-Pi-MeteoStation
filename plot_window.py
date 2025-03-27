@@ -10,7 +10,6 @@ class PlotWindow(QWidget):
     def __init__(self, button_name, backend, theme):
         """Initializes the plot window with UI elements and settings."""
         super().__init__()
-
         self.central_widget = QWidget()
         self.button_name = button_name
         self.theme = theme

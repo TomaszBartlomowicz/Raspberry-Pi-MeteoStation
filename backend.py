@@ -15,6 +15,7 @@ from PyQt5.QtCore import QTimer
 # GPIO.setup(8, GPIO.IN)
 
 
+
 class Backend:
     def __init__(self):
         self.data = {
