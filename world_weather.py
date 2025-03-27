@@ -10,11 +10,6 @@ class WorldWeather(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.window_width = 1024
-        self.window_height = 600
-        self.setGeometry(0, 0, self.window_width, self.window_height)
-
-
         # Some Well-Known Capitals Around the World
         self.world_capitals = [
             "Abu Dhabi", "Amman", "Amsterdam", "Ankara", "Athens", "Baghdad", "Bangkok", "Beijing", "Belgrade",
@@ -123,9 +118,9 @@ class WorldWeather(QWidget):
         selecting_layout.addStretch(1)
 
         check_layout = QHBoxLayout()
-        check_layout.addStretch(1)
+        check_layout.addStretch(4)
         check_layout.addWidget(self.get_weather_button, 10)
-        check_layout.addStretch(1)
+        check_layout.addStretch(4)
 
         main_layout.addWidget(self.city_label)
         main_layout.addStretch(1)

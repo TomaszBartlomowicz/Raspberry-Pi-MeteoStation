@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget()
         self.dark_mode = True
         self.app = QApplication.instance()
+
         set_theme(self.app, self.dark_mode)
         self.window_width = 1024
         self.window_height = 600

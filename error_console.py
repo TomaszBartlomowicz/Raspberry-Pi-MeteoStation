@@ -6,9 +6,6 @@ class ErrorConsole(QWidget):
     def __init__(self, theme, backend):
         super().__init__()
 
-        self.window_width = 1024
-        self.window_height = 600
-        self.setGeometry(0, 0, self.window_width, self.window_height)
         self.theme = theme
         self.backend = backend
         self.title = QLabel("Errors detected:")

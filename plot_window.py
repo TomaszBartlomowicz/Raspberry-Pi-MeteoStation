@@ -12,9 +12,6 @@ class PlotWindow(QWidget):
         super().__init__()
 
         self.central_widget = QWidget()
-        self.window_width = 1024
-        self.window_height = 600
-        self.setGeometry(0, 0, self.window_width, self.window_height)
         self.button_name = button_name
         self.theme = theme
         self.backend = backend
@@ -50,7 +47,7 @@ class PlotWindow(QWidget):
         # Buttons
         self.return_button = QPushButton("Back", self)
         self.one_hour_button = QPushButton("1H", self)
-        self.hour_24_button = QPushButton("12H", self)
+        self.hour_24_button = QPushButton("10H", self)
         self.buttons = [self.return_button, self.one_hour_button, self.hour_24_button]
         self.return_button.clicked.connect(self.close)
 
@@ -110,7 +107,8 @@ class PlotWindow(QWidget):
         self.plot_choice = "24h"
         print(f"Plot choice changed to: {self.plot_choice}")
         self.updating_plot()
-
+        print(self.backend.hours["hours_24h"])
+        print(self.backend.data["room_temp_24h"])
     def configure_axis(self, axis, font_size=12):
         """Configures axis appearance with font size and colors."""
         axis.setTickFont(pg.QtGui.QFont('Arial', font_size))
@@ -146,7 +144,7 @@ class PlotWindow(QWidget):
         plotted_data_key = plotted_data.get(self.button_name)
         plot_color_key = plot_colors.get(self.button_name)
         hour_labels = [(time, label) for time, label in
-                       zip(self.backend.hours["time_1h"], self.backend.hours["hours_1h"])]
+                       zip(self.backend.hours[time_key], self.backend.hours[f"hours_{self.plot_choice}"])]
         x_axis = self.parameters_plot.getAxis('bottom')
         x_axis.setTicks([hour_labels])
         self.parameters_plot.plot(

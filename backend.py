@@ -1,21 +1,18 @@
 from datetime import datetime
 from PyQt5.QtCore import QTimer
 
-""" Imports for Raspberry PI"""
+""" Imports and declarations for Raspberry PI"""
 # from w1thermsensor import W1ThermSensor
-# from bme280 import BME280
+# from BME280 import BME280
 # import RPi.GPIO as GPIO
 # from smbus import SMBus
+# from w1thermsensor.errors import SensorNotReadyError, NoSensorFoundError
 #
-# # from w1thermsensor.errors import SensorNotReadyError
-# bus = SMBus(1)
-# bme280 = BME280(i2c_dev=bus)
+# BUS = SMBus(1)
+# BME280 = BME280(i2c_dev=BUS)
 # GPIO.setmode(GPIO.BOARD)
-#
 # GPIO.setwarnings(False)
-#
-# GPIO.setup(36, GPIO.IN)
-
+# GPIO.setup(8, GPIO.IN)
 
 
 class Backend:
@@ -44,6 +41,7 @@ class Backend:
         self.timer1.start(180000)  # Updates every 3 minutes
         self.timer1.timeout.connect(self.update_data)
         self.errors = []
+        self.counter = 0
         self.update_data()
 
     def add_data(self, key, value, max_length):
@@ -71,11 +69,11 @@ class Backend:
     def update_data(self):
         """Loads weather data, updates hourly and daily logs, and stores time references."""
         try:
-            room_temperature = bme280.get_temperature()
+            room_temperature = BME280.get_temperature()
             outside_temperature = W1ThermSensor().get_temperature()
-            pressure = bme280.get_pressure()
-            humidity = bme280.get_humidity()
-            if GPIO.input(36) == GPIO.LOW:
+            pressure = BME280.get_pressure()
+            humidity = BME280.get_humidity()
+            if GPIO.input(8) == GPIO.LOW:
                 rain = 1
             else:
                 rain = 0
@@ -87,8 +85,10 @@ class Backend:
             self.add_data("rain_1h", rain, 20)
             self.add_time("hours_1h", 20)
             self.add_time("time_1h", 20)
+            self.counter += 1
+            print(self.counter)
 
-            if len(self.hours["hours_24h"]) % 10 == 0:
+            if self.counter == 1 or self.counter % 10 == 0:
                 self.add_data("room_temp_24h", room_temperature, 20)
                 self.add_data("outside_temp_24h", outside_temperature, 20)
                 self.add_data("humidity_24h", humidity, 20)
@@ -100,24 +100,19 @@ class Backend:
             now = datetime.now()
             formatted_now = now.strftime("%Y-%m-%d %H:%M")
             error_message = (f"At {formatted_now} {type(e).__name__} occurred when plotting weather parametres. \n"
-                  f"No values were plotted on a graph at the mentioned time")
+                             f"No values were plotted on a graph at the mentioned time")
             self.errors.append(error_message)
-
-
-
 
     def get_room_temp(self, button):
         """Gets and updates room temperature reading"""
         try:
-            reading = bme280.get_temperature()
+            reading = BME280.get_temperature()
             temperature = str(round(reading, 2))
             button.setText(temperature + chr(176) + "C")
         except OSError:
             button.setText("no sensor found")
-            self.errors.append("Room temperature sensor error: Sensor not found ")
         except NameError:
             button.setText("library error")
-
 
     def get_outside_temp(self, button):
         """Gets and updates outside temperature reading"""
@@ -126,15 +121,19 @@ class Backend:
             reading = sensor.get_temperature()
             temperature = str(round(reading, 2))
             button.setText(temperature + chr(176) + "C")
-        except ModuleNotFoundError:
-            button.setText("no sensor")
         except NameError:
             button.setText("library error")
+        except SensorNotReadyError:
+            button.setText("sensor not ready")
+        except NoSensorFoundError:
+            button.setText("no sensor found")
+        except Exception as e:
+            button.setText(type(e).__name__)
 
     def get_humidity(self, button):
         """Gets and updates humidity reading"""
         try:
-            reading = bme280.get_humidity()
+            reading = BME280.get_humidity()
             humidity = str(round(reading, 2))
             button.setText(f"{humidity}%")
         except OSError:
@@ -144,11 +143,10 @@ class Backend:
         except Exception as e:
             button.setText(type(e).__name__)
 
-
     def get_atm_pressure(self, button):
         """Gets and updates pressure reading"""
         try:
-            reading = bme280.get_pressure()
+            reading = BME280.get_pressure()
             pressure = str(round(reading, 2))
             button.setText(f"{pressure} hPa")
         except OSError:
@@ -164,7 +162,7 @@ class Backend:
         Updates rain info in main window
         """
         try:
-            if GPIO.input(36) == GPIO.LOW:
+            if GPIO.input(8) == GPIO.LOW:
                 button.setText('Rain detected')
             else:
                 button.setText('No rain')
@@ -180,7 +178,6 @@ class Backend:
         date = real_time.strftime("%d-%m-%Y")
         time_label.setText(hour)
         date_label.setText(date)
-
 
     def update_date_and_time_short(self, time_label, date_label):
         """Updates the displayed date and time labels with a shorter time format (HH:MM)."""
