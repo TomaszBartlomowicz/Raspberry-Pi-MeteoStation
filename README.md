@@ -1,8 +1,8 @@
-# Raspberry Pi Meteo Station app
+# 🌦️ Raspberry Pi Meteo Station app
 
 A weather monitoring application for Raspberry Pi, written in Python using PyQt5 and PyQtGraph. It tracks local weather conditions using sensors and allows checking the weather in many cities worldwide.
 
-## Features
+## 🧩 Features
 
 - Measurement of indoor and outdoor temperature
 - Reading pressure, humidity, and detecting precipitation
@@ -11,14 +11,14 @@ A weather monitoring application for Raspberry Pi, written in Python using PyQt5
 - Light and dark mode interface
 - Error console for diagnostics
 
-## Sensor used:
+## 📟 Sensor used:
   
 - BME280 (temperature, pressure, humidity)
 - DS18B20 (outside temperature)
 - YL-83 (rain detection)
 
 
-## Screenshots
+## 📷 Screenshots
 
 ### Main application window:
 ![20250326_13h14m28s_grim](https://github.com/user-attachments/assets/e0e6615b-9633-41dc-8d1f-b211bb607d1f)
@@ -36,7 +36,7 @@ A weather monitoring application for Raspberry Pi, written in Python using PyQt5
 
 
 
-## Installation
+## ⚙️ Installation
 
 ### Requirements
 
